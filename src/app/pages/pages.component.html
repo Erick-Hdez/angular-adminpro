@@ -1,0 +1,39 @@
+<div id="main-wrapper">
+
+    <!-- Header -->
+    <app-header></app-header>
+
+    <!-- Sidebar -->
+    <app-sidebar></app-sidebar>
+    
+    <!-- Wrapper Content -->
+    <div class="page-wrapper">
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs -->
+            <app-breadcrumbs></app-breadcrumbs>
+
+            <!-- Sistema de rutas -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            
+                            <router-outlet></router-outlet>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+        </div>
+
+
+        <!-- footer -->
+        <footer class="footer">
+            © 20xx Admin Pro by wrappixel.com
+        </footer>
+    </div>
+
+</div>
+
