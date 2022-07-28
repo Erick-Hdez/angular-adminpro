@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 
 // Modules
 import { SharedModule } from '../shared/shared.module';
+import { ComponentsModule } from '../components/components.module';
 
 // Components
 import { PagesComponent } from './pages.component';
@@ -28,8 +31,10 @@ import { AppRoutingModule } from '../app-routing.module';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ComponentsModule
   ]
 })
 export class PagesModule { }
