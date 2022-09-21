@@ -7,6 +7,7 @@ import { tap, map, Observable, catchError, of } from 'rxjs';
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { Usuario } from '../models/usuario.model';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 declare const google: any;
 const base_url = environment.base_url;
@@ -31,6 +32,14 @@ export class UsuarioService {
     return this.usuario.id || '';
   }
 
+  get headers() {
+    return {
+      headers:{ 
+        'x-token': this.token
+      }
+    };
+  }
+
   logout() {
     localStorage.removeItem('token');
     
@@ -45,12 +54,7 @@ export class UsuarioService {
   validarToken(): Observable<boolean> {
     
     const url = `${ base_url }/login/renew`;
-
-    return this.http.get( url , {
-        headers:{ 
-          'x-token': this.token
-        }
-      })
+    return this.http.get( url , this.headers )
       .pipe(
         // tap( ( resp:any ) => {
         map( ( resp:any ) => {
@@ -69,6 +73,7 @@ export class UsuarioService {
   }
 
   crearUsuario( formData: RegisterForm ) {
+
     const url = `${ base_url }/usuarios`
     return this.http.post( url, formData )
       .pipe(
@@ -79,6 +84,7 @@ export class UsuarioService {
   }
 
   loginUsuario( formData: LoginForm ) {
+
     const url = `${ base_url }/login`;
     return this.http.post( url, formData )
       .pipe(
@@ -89,6 +95,7 @@ export class UsuarioService {
   }
 
   loginGoogle( token: string ) {
+    
     const url = `${ base_url }/login/google`;
     return this.http.post( url, { token } )
       .pipe(
@@ -104,13 +111,38 @@ export class UsuarioService {
       ...data, 
       role: this.usuario.role || ''
     }
+
     const url = `${ base_url }/usuarios/${ this.uid }`;
+    return this.http.put(url, data, this.headers );
+  }
 
-    return this.http.put(url, data, {
-      headers:{ 
-        'x-token': this.token
-      }
-    });
+  cargarUsuarios( desde: number = 0 ) {
+    const url = `${ base_url }/usuarios?desde=${ desde }`;
+    return this.http.get<CargarUsuario>( url, this.headers )
+      .pipe(
+        map( resp => {
 
+          const usuarios = resp.usuarios
+            .map( user => new Usuario( 
+              user.nombre, user.email, '', user.google, user.img, user.role, user.id )
+            );
+
+          return {
+            total: resp.total,
+            usuarios
+          };
+
+        })
+      );
+  }
+
+  eliminarUsuario(id: string ) {
+    const url = `${ base_url }/usuarios/${ id }`;
+    return this.http.delete( url, this.headers );
+  }
+
+  actualizarUsuario( usuario: Usuario) {
+    const url = `${ base_url }/usuarios/${ usuario.id }`;
+    return this.http.put(url, usuario, this.headers );
   }
 }
