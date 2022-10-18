@@ -53,7 +53,10 @@
                             <tr *ngFor="let usuario of usuarios" >
 
                                 <td class="text-center">
-                                    <img [src]="usuario.imagenUrl" alt="avatar" class="avatar cursor" (click)="cambiarImagen(usuario)">
+                                    <img [src]="usuario.imagenUrl" 
+                                         alt="avatar" 
+                                         class="h50 avatar cursor" 
+                                        (click)="cambiarImagen( usuario )">
                                 </td>
 
                                 <td>{{ usuario.email }}</td>

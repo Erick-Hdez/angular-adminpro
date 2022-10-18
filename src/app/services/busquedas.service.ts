@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
+import { Hospital } from '../models/hospital.model';
 
 const base_url = environment.base_url;
 
@@ -24,6 +25,14 @@ export class BusquedasService {
           user.role, 
           user.id 
        ));
+  }
+
+  private transformarHospitales( resultados: any[] ): Hospital[] {
+    return resultados;
+  }
+
+  private transformarMedicos( resultados: any[] ): any[] {
+    return resultados;
   }
 
   get token(): string {
@@ -53,10 +62,10 @@ export class BusquedasService {
               return this.transformarUsuarios( resp.resultados );
             break;
             case 'medicos':
-              return this.transformarUsuarios( resp.resultados );
+              return this.transformarMedicos( resp.resultados );
             break;
             case 'hospitales':
-              return this.transformarUsuarios( resp.resultados );
+              return this.transformarHospitales( resp.resultados );
             break;
             default:
               return [];
