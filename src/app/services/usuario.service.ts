@@ -9,6 +9,7 @@ import { LoginForm } from '../interfaces/login-form.interface';
 import { Usuario } from '../models/usuario.model';
 import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
+
 declare const google: any;
 const base_url = environment.base_url;
 
@@ -32,6 +33,10 @@ export class UsuarioService {
     return this.usuario.id || '';
   }
 
+  get role(): 'USER_ROLE' | 'ADMIN_ROLE' {
+    return this.usuario.role!;
+  }
+
   get headers() {
     return {
       headers:{ 
@@ -40,9 +45,17 @@ export class UsuarioService {
     };
   }
 
+  guardarLocalStorage( token: string, menu: any){
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify( menu ));
+  }
+
   logout() {
+    // Borrar el token 
     localStorage.removeItem('token');
-    
+    // Borrar menu
+    localStorage.removeItem('menu');
+
     // Remover la sesion de google 
     // google.accounts.id.revoke('correo', () => {
 
@@ -62,7 +75,8 @@ export class UsuarioService {
           const {nombre, email, role, img = '', google, id } = resp.usuario;
           this.usuario = new Usuario(nombre, email, '',  google, img, role, id);
 
-          localStorage.setItem('token', resp.token);
+          this.guardarLocalStorage( resp.token, resp.menu );
+
           console.log(this.usuario);
           return true;
           
@@ -77,9 +91,7 @@ export class UsuarioService {
     const url = `${ base_url }/usuarios`
     return this.http.post( url, formData )
       .pipe(
-        tap( (resp: any) => {
-          localStorage.setItem('token', resp.usuario.token);
-        })
+        tap( (resp: any) => this.guardarLocalStorage( resp.token, resp.menu ))
       );          
   }
 
@@ -88,9 +100,7 @@ export class UsuarioService {
     const url = `${ base_url }/login`;
     return this.http.post( url, formData )
       .pipe(
-        tap( (resp: any) => {
-          localStorage.setItem('token', resp.token);
-        })
+        tap( (resp: any) => this.guardarLocalStorage( resp.token, resp.menu ))
       );                 
   }
 
@@ -99,10 +109,19 @@ export class UsuarioService {
     const url = `${ base_url }/login/google`;
     return this.http.post( url, { token } )
       .pipe(
-        tap( ( resp:any ) => {
-          localStorage.setItem('token', resp.tokenDB);
-        })
+        tap( ( resp:any ) => this.guardarLocalStorage( resp.token, resp.menu ))
       );
+
+    // return new Promise( resolve => {
+    //   gapi.load('auth2', () => {
+    //     this.auth2 = gapi.auth2.init({
+    //       client_id:'',
+    //       cookiepolicy: 'single_host_origin',
+    //     });
+
+    //     resolve();
+    //   });
+    // })
   }
 
   actualizarPerfil( data: { email: string, nombre: string, role: string }) {

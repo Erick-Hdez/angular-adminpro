@@ -1,0 +1,117 @@
+
+<div class="row animated fadeIn fast">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h3>Usuarios</h3> 
+
+                <div *ngIf="usuarios?.length == 0" class="alert alert-info animated fadeIn fast">
+                    <!-- <h4 class="alert-heading">No hay usuarios</h4> -->
+                    <!-- <p></p> -->
+                    <p class="mb-0"> No se encontraron usuarios con ese termino</p>
+                </div>
+
+                <div *ngIf="usuarios" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="w100">Foto</th>
+                                <th>Usuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let usuario of usuarios"
+                                class="cursor"
+                                (click)="abrirUsuario(usuario)">
+                                <td class="text-center">
+                                    <img class="h50 avatar cursor animated fadeIn fast" 
+                                         [src]="usuario.img! | imagen: 'usuarios'" 
+                                         [alt]="usuario.nombre" />
+                                </td>
+                                <td>{{ usuario.nombre }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h3>Médicos</h3> 
+
+                <div *ngIf="medicos?.length == 0" class="alert alert-info animated fadeIn fast">
+                    <!-- <h4 class="alert-heading">No hay usuarios</h4> -->
+                    <!-- <p></p> -->
+                    <p class="mb-0"> No se encontraron médicos con ese termino</p>
+                </div>
+
+                <div *ngIf="medicos" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="w100">Foto</th>
+                                <th>Médico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let medico of medicos"
+                                class="cursor"
+                                (click)="abrirMedico(medico)">
+                                <td class="text-center">
+                                    <img class="h50 avatar cursor animated fadeIn fast" 
+                                         [src]="medico.img! | imagen: 'medicos'" 
+                                         [alt]="medico.nombre" />
+                                </td>
+                                <td>{{ medico.nombre }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+
+                <h3>Hospitales</h3> 
+
+                <div *ngIf="hospitales?.length == 0" class="alert alert-info animated fadeIn fast">
+                    <!-- <h4 class="alert-heading">No hay usuarios</h4> -->
+                    <!-- <p></p> -->
+                    <p class="mb-0"> No se encontraron hospitales con ese termino</p>
+                </div>
+
+                <div *ngIf="hospitales" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="w100">Foto</th>
+                                <th>Hospital</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let hospital of hospitales"
+                                class="cursor"
+                                (click)="abrirHospital(hospital)">
+                                <td class="text-center">
+                                    <img  class="h50 avatar cursor animated fadeIn fast" 
+                                          [src]="hospital.img! | imagen: 'hospitales'" 
+                                          [alt]="hospital.nombre" />
+                                </td>
+                                <td>{{ hospital.nombre }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,7 @@
 
                 <input type="text" 
                        class="form-control"
+                       [value]="hospital? hospital : ''"
                        #txtTermino
                        (keyup)="buscar( txtTermino.value )"
                        placeholder="Buscar hospital...">

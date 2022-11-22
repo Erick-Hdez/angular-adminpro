@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
-import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 import { Hospital } from '../models/hospital.model';
 
 const base_url = environment.base_url;
@@ -14,6 +13,37 @@ const base_url = environment.base_url;
 export class BusquedasService {
 
   constructor( private http: HttpClient ) { }
+  
+  public usuario$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public hospital$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
+
+  get headers() {
+    return {
+      headers:{ 
+        'x-token': this.token
+      }
+    };
+  }
+
+  get usuario() {
+    return this.usuario$.asObservable();
+  }
+  
+  set setUsuario( usuario: string ) {
+    this.usuario$.next(usuario);
+  }
+
+  get hospital() {
+    return this.hospital$.asObservable();
+  }
+
+  set setHospital( hospital: string ) {
+    this.hospital$.next(hospital);
+  }
 
   private transformarUsuarios( resultados: any[] ): Usuario[] {
     return resultados.map( 
@@ -35,16 +65,9 @@ export class BusquedasService {
     return resultados;
   }
 
-  get token(): string {
-    return localStorage.getItem('token') || '';
-  }
-
-  get headers() {
-    return {
-      headers:{ 
-        'x-token': this.token
-      }
-    };
+  busquedaGlobal( termino: string ) {
+    const url = `${ base_url }/todo/${ termino }`;
+    return this.http.get<any>(url, this.headers);
   }
 
   buscar( 
@@ -72,7 +95,6 @@ export class BusquedasService {
           }
         })
       );
-
   }
 
 }

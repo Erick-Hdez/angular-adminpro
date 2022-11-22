@@ -18,6 +18,7 @@ import { BusquedasService } from '../../../services/busquedas.service';
 export class HospitalesComponent implements OnInit, OnDestroy {
 
   public hospitales!: Hospital[];
+  public hospital!: string;
   public cargando: boolean = true;
   public  imgSubs!: Subscription;
   constructor(
@@ -32,10 +33,22 @@ export class HospitalesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.cargarHospitales();
+    this.busquedasService.hospital
+      .subscribe( hospital => {
+        this.hospital = hospital;
+        console.log(this.hospital);
+      }).unsubscribe();
+
+    if ( this.hospital ) {
+      this.buscar( this.hospital );
+    }
+    else {
+      this.cargarHospitales();
+    }
 
     this.imgSubs = this.modalImagenService.nuevaImagen
-    .pipe( delay(800) ).subscribe( img => this.cargarHospitales() );
+      .pipe( delay(800) )
+      .subscribe( img => this.cargarHospitales() );
   }
 
   cargarHospitales() {
@@ -64,6 +77,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
       .subscribe( (resultados: Hospital[]) => {
         console.log(resultados);
         this.hospitales = resultados;
+        this.cargando = false;
       }); 
   }
 

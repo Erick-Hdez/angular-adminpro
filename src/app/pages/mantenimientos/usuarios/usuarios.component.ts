@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { ChildActivationStart } from '@angular/router';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuarioService } from '../../../services/usuario.service';
 import { BusquedasService } from '../../../services/busquedas.service';
 import Swal from 'sweetalert2';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
 import { delay, Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-usuarios',
@@ -18,7 +18,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   @ViewChild('txtTermino') termino: string = '';
 
   public usuarios: Usuario[] = [];
-  public usuariosTemp: Usuario[] = [];
+  public usuario!: string;
+  // public usuariosTemp: Usuario[] = [];
   public totalUsuarios: number = 0;
   public desde: number = 0;
   public cargando: boolean = true;
@@ -36,10 +37,24 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
-    this.cargarUsuarios();
 
+    this.busquedasService.usuario
+      .subscribe( nombre => {
+        this.usuario = nombre;
+        console.log(this.usuario);
+      }).unsubscribe();
+
+      if ( this.usuario ) {
+        this.buscar( this.usuario );
+      }
+      else {
+        this.cargarUsuarios();
+      }
+    
     this.imgSubs = this.modalImagenService.nuevaImagen
-      .pipe( delay(800) ).subscribe( img => this.cargarUsuarios() );
+      .pipe( delay(800) )
+      .subscribe( img => this.cargarUsuarios() );
+
   }
 
   cargarUsuarios() {
@@ -50,7 +65,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     .subscribe( ( { total , usuarios }  ) => {
       this.totalUsuarios = total;
       this.usuarios = usuarios;
-      this.usuariosTemp = usuarios;
+      // this.usuariosTemp = usuarios;
       console.log(this.usuarios)
 
       this.cargando = false;
@@ -84,6 +99,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       .subscribe( (resultados: Usuario[]) => {
         console.log(resultados);
         this.usuarios = resultados;
+        console.log('resultados', this.usuarios);
+        this.cargando = false;
       })
   }
 
